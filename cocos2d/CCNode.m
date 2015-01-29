@@ -122,6 +122,7 @@ static NSUInteger globalOrderOfArrival = 1;
 @synthesize visible = _visible;
 @synthesize parent = _parent;
 @synthesize zOrder = _zOrder;
+@synthesize tag = _tag;
 @synthesize name = _name;
 @synthesize vertexZ = _vertexZ;
 @synthesize userObject = _userObject;
@@ -159,6 +160,8 @@ static NSUInteger globalOrderOfArrival = 1;
 		_vertexZ = 0;
 
 		_visible = YES;
+        
+        _tag = -1;
 
 		_zOrder = 0;
 
@@ -658,6 +661,19 @@ TransformPointAsVector(CGPoint p, CGAffineTransform t)
 
 	// not found
 	return nil;
+}
+
+-(NSInteger) countOfTagChildren
+{
+    NSInteger tagCount = 0;
+    for (CCNode* node in _children)
+    {
+        if(node.tag != -1)
+        {
+            tagCount++;
+        }
+    }
+    return tagCount;
 }
 
 // Recursively increment/decrement _pausedAncestors on the children of 'node'.

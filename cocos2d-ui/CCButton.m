@@ -467,11 +467,26 @@
             @"verticalAlignment"];
 }
 
+- (NSArray*) keysForwardedToSprite9
+{
+    return [NSArray arrayWithObjects:@"marginLeft",
+            @"marginRight",
+            @"marginTop",
+            @"marginBottom",
+            nil];
+}
+
 - (void) setValue:(id)value forKey:(NSString *)key
 {
     if ([[self keysForwardedToLabel] containsObject:key])
     {
         [_label setValue:value forKey:key];
+        [self needsLayout];
+        return;
+    }
+    if ([[self keysForwardedToSprite9] containsObject:key])
+    {
+        [_background setValue:value forKey:key];
         [self needsLayout];
         return;
     }
@@ -483,6 +498,10 @@
     if ([[self keysForwardedToLabel] containsObject:key])
     {
         return [_label valueForKey:key];
+    }
+    if ([[self keysForwardedToSprite9] containsObject:key])
+    {
+        return [_background valueForKey:key];
     }
     return [super valueForKey:key];
 }

@@ -191,6 +191,9 @@
 
 	// Weak ref to parent.
 	__weak CCNode *_parent;
+    
+    // a tag. any number you want to assign to the node
+    NSInteger _tag;
 
 	// A tag any name you want to assign to the node
     NSString* _name;
@@ -611,8 +614,13 @@
 /// @name Naming Nodes
 /// -----------------------------------------------------------------------
 
+/** A tag used to identify the node easily */
+@property(nonatomic,readwrite,assign) NSInteger tag;
+-(NSInteger) countOfTagChildren;
+
 /** A name tag used to help identify the node easily. Can be used both to encode custom data but primarily meant
  to obtain a node by its name.
+ 
  
  @see getChildByName:recursively:
  @see userObject */

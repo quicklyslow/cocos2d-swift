@@ -39,6 +39,10 @@ const float CCSprite9SliceMarginDefault         = 1.0f/3.0f;
 @implementation CCSprite9Slice
 {
     CGSize _originalContentSize;
+    float f_marginLeft;
+    float f_marginRight;
+    float f_marginTop;
+    float f_marginBottom;
 }
 
 // ---------------------------------------------------------------------
@@ -134,14 +138,14 @@ TexCoordInterpolationMatrix(const CCSpriteVertexes *verts)
 	
 	float alphaX2[4];
 	alphaX2[0] = 0;
-	alphaX2[1] = _marginLeft / (physicalSize.width / rectSize.width);
-	alphaX2[2] = 1 - _marginRight / (physicalSize.width / rectSize.width);
+	alphaX2[1] = f_marginLeft / (physicalSize.width / rectSize.width);
+	alphaX2[2] = 1 - f_marginRight / (physicalSize.width / rectSize.width);
 	alphaX2[3] = 1;
-	const float alphaX[4] = {0.0f, _marginLeft, scaleX - _marginRight, scaleX};
-	const float alphaY[4] = {0.0f, _marginBottom, scaleY - _marginTop, scaleY};
+	const float alphaX[4] = {0.0f,f_marginLeft, scaleX - f_marginRight, scaleX};
+	const float alphaY[4] = {0.0f, f_marginBottom, scaleY - f_marginTop, scaleY};
 	
-	const float alphaTexX[4] = {0.0f, _marginLeft, 1.0f - _marginRight, 1.0f};
-	const float alphaTexY[4] = {0.0f, _marginBottom, 1.0f - _marginTop, 1.0f};
+	const float alphaTexX[4] = {0.0f, f_marginLeft, 1.0f - f_marginRight, 1.0f};
+	const float alphaTexY[4] = {0.0f, f_marginBottom, 1.0f - f_marginTop, 1.0f};
 	
 	// Interpolation matrices for the vertexes and texture coordinates
 	const CCSpriteVertexes *_verts = self.vertexes;
@@ -186,42 +190,59 @@ TexCoordInterpolationMatrix(const CCSpriteVertexes *verts)
 
 - (void)setMargin:(float)margin
 {
-    margin = clampf(margin, 0, 0.5);
-    _marginLeft = margin;
-    _marginRight = margin;
-    _marginTop = margin;
-    _marginBottom = margin;
+    float f_margin = (float)margin/self.textureRect.size.width;
+    _marginLeft = f_margin;
+    _marginRight = f_margin;
+    _marginTop = f_margin;
+    _marginBottom = f_margin;
 }
 
 // ---------------------------------------------------------------------
 
 - (void)setMarginLeft:(float)marginLeft
 {
-    _marginLeft = clampf(marginLeft, 0, 1);
+    _marginLeft = marginLeft;
+    if(self.textureRect.size.width == 0)
+        f_marginLeft = 0.0f;
+    else
+        f_marginLeft = (float)_marginLeft/self.textureRect.size.width;
     // sum of left and right margin, can not exceed 1
-    NSAssert((_marginLeft + _marginRight) <= 1, @"Sum of left and right margine, can not exceed 1");
+    // NSAssert((_marginLeft + _marginRight) <= 1, @"Sum of left and right margine, can not exceed 1");
 }
 
 - (void)setMarginRight:(float)marginRight
 {
-    _marginRight = clampf(marginRight, 0, 1);
+    _marginRight = marginRight;
+    if(self.textureRect.size.width == 0)
+        f_marginRight = 0.0f;
+    else
+        f_marginRight = (float)_marginRight/self.textureRect.size.width;
     // sum of left and right margin, can not exceed 1
-    NSAssert((_marginLeft + _marginRight) <= 1, @"Sum of left and right margine, can not exceed 1");
+    //NSAssert((_marginLeft + _marginRight) <= 1, @"Sum of left and right margine, can not exceed 1");
 }
 
 - (void)setMarginTop:(float)marginTop
 {
-    _marginTop = clampf(marginTop, 0, 1);
+    _marginTop = marginTop;
+    if(self.textureRect.size.height == 0)
+        f_marginRight = 0;
+    else
+        f_marginTop = (float)_marginTop/self.textureRect.size.height;
     // sum of top and bottom margin, can not exceed 1
-    NSAssert((_marginTop + _marginBottom) <= 1, @"Sum of top and bottom margine, can not exceed 1");
+    // NSAssert((_marginTop + _marginBottom) <= 1, @"Sum of top and bottom margine, can not exceed 1");
 }
 
 - (void)setMarginBottom:(float)marginBottom
 {
-    _marginBottom = clampf(marginBottom, 0, 1);
+    _marginBottom = marginBottom;
+    if(self.textureRect.size.height == 0)
+        f_marginBottom = 0;
+    else
+        f_marginBottom = (float)_marginBottom/self.textureRect.size.height;
     // sum of top and bottom margin, can not exceed 1
-    NSAssert((_marginTop + _marginBottom) <= 1, @"Sum of top and bottom margine, can not exceed 1");
+    // NSAssert((_marginTop + _marginBottom) <= 1, @"Sum of top and bottom margine, can not exceed 1");
 }
+
 
 // ---------------------------------------------------------------------
 
